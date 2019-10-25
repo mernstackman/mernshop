@@ -1,0 +1,45 @@
+{
+  "name": "mern_shop",
+  "version": "1.0.0",
+  "description": "Simple ecommerce system using MERN (MysQL, Express, Node, React)",
+  "main": "./src/index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node ./src/index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mernstackman/mernshop.git"
+  },
+  "keywords": [
+    "ecommerce",
+    "mysql",
+    "sequelize",
+    "node",
+    "react",
+    "express"
+  ],
+  "author": "Ari Susanto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mernstackman/mernshop/issues"
+  },
+  "homepage": "https://github.com/mernstackman/mernshop#readme",
+  "dependencies": {
+    "argon2": "^0.25.0",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql2": "^1.7.0",
+    "randombytes": "^2.1.0",
+    "sequelize": "^5.21.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "nodemon": "^1.19.4"
+  }
+}

@@ -1,0 +1,31 @@
+PROJECT SYLLABUS
+
+START SMALL (piece by piece) will MAKE IT MODULAR (part by part) - Create components in demand
+Focus on Front End - Don't pay too much attentions on the back end
+The MAIN GOAL of this app is to demonstrate the ability in using react js for front end development
+
+I. LOGIN SYSTEM
+    A. Basic Login/ Register
+        1. Back end
+            a. Simple user data/ model
+            b. Password authentication method
+            c. Create user API
+            d. Login user API
+            e. Test using jest
+            f. Dockerize
+        2. Front end
+            a. Basic menu bar
+            b. Basic login/ registration form pop up (server based only)
+            c. Blank home page
+            d. Redux
+            e. Redux saga
+            f. Test using jest
+            g. Dockerize
+    B. Add Social Login
+    C. Add Role To user
+    D. Add Privileges To Roles
+
+II. PRODUCT
+    A. Products
+    B. Categories
+    C. Departments
