@@ -1,6 +1,6 @@
-// import bcrypt from "bcrypt";
-import * as argon2 from "argon2";
-import randomBytes from "randombytes";
+import bcrypt from "bcrypt";
+/* import * as argon2 from "argon2";
+import randomBytes from "randombytes"; */
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -16,10 +16,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          is: ["^[a-z0-9_]+$", "i"],
-          msg: "Username can only contain letters, numbers and underscores",
+          is: {
+            args: ["^[a-z0-9_]+$", "i"],
+            msg: "Username can only contain letters, numbers and underscores"
+          },
           len: [3, 20],
-          noEmpty: true
+          notEmpty: true
         }
       },
       email: {
@@ -27,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
         validate: {
-          noEmpty: true,
+          notEmpty: true,
           isEmail: true
         }
       },
@@ -41,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
               "Password should be between 6 to 100 characters long, at least contain one Uppercase letter, lowercase letter, number and special character"
           },
           // len: { args: [6, 100], msg: "Password length should be between 6 to 100 characters" },
-          noEmpty: true
+          notEmpty: true
         }
       },
       salt: DataTypes.STRING,
@@ -56,30 +58,37 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(14),
         validate: { isNumeric: { msg: "Phone can only contain numbers" } }
       },
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE
+      createdAt: { type: DataTypes.DATE, field: "created_at" },
+      updatedAt: { type: DataTypes.DATE, field: "updated_at" },
+      deletedAt: { type: DataTypes.DATE, field: "deleted_at" }
     },
     {
       underscored: true,
-      tableName: "user"
+      // tableName: "users",
+      timestamps: true,
+      paranoid: true
     }
   );
 
   User.beforeCreate(async user => {
-    const salt = randomBytes(32).toString("hex");
+    /*     const salt = randomBytes(32).toString("hex");
     user.salt = salt;
+    user.password = await user.createPasswordHash(salt); */
+    const salt = await bcrypt.genSalt(10);
     user.password = await user.createPasswordHash(salt);
   });
 
-  User.prototype.createPasswordHash = async function createPasswordHash(salt) {
-    return argon2.hash(this.password, { salt });
+  User.prototype.createPasswordHash = async function(salt) {
+    // return argon2.hash(this.password, { salt });
+    return bcrypt.hash(this.password, salt);
   };
 
-  User.prototype.verifyPassword = async function verifyPassword(password) {
-    return argon2.verify(this.password, password);
+  User.prototype.verifyPassword = async function(password) {
+    // return argon2.verify(this.password, password);
+    return bcrypt.compare(password, this.password);
   };
 
-  User.prototype.getSafeDataValues = function getSafeDataValues() {
+  User.prototype.getSafeDataValues = function() {
     const { password, ...data } = this.dataValues;
     return data;
   };

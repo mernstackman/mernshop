@@ -1,1 +1,1 @@
-{ "verbose": false, "watch": ["./server"], "ext": "js" }
+{ "verbose": false, "watch": ["./src"], "ext": "js" }

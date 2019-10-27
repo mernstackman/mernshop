@@ -60,23 +60,47 @@ STEPS:
   - use mockaroo.com to generate fake json data
   - encrypt password and replace the value is seed file with it << ---
   - sequelize db:seed:all
-☐ Create node js server: <<<<<<<<------------------------------
-  - Create index.js file inside "src" folder. This will be the main file for the node js server (echo > src/index.js)
-  - add support to latest es6 syntax:
-    - > install babel: npm i -D @babel/core @babel/cli @babel/node @babel/preset-env
-    - > create .babelrc file. content: {"presets": ["@babel/preset-env"] }
-  - setup nodemon to enable hot reloading:
-    - > install nodemon: npm i -D nodemon
-    - > create nodemon.json file on root folder: echo > nodemon.json
-      - >> content: { "verbose": false, "watch": ["./server"], "ext": "js" } 
-  - add command script to package.json file: "dev": "nodemon --exec babel-node ./server/index.js",
-  - Create app.js inside "src" folder for express configuration: echo > src/app.js
-    - > import express and define app constant to use express: const app = express();
-    - > import body parser and use it as the express app middleware:
-        - -> app.use(bodyParser.urlencoded({extended: true})); app.use(bodyParser.json());
-    - > export default express, for later use
-  - Create server connection inside "src/index.js" file.
-  - Test connection: npm run dev
+☐ Create node js server:
+- Create index.js file inside "src" folder. This will be the main file for the node js server (echo > src/index.js)
+- add support to latest es6 syntax:
+- > install babel: npm i -D @babel/core @babel/cli @babel/node @babel/preset-env
+- > create .babelrc file. content: {"presets": ["@babel/preset-env"] }
+- setup nodemon to enable hot reloading:
+- > install nodemon: npm i -D nodemon
+- > create nodemon.json file on root folder: echo > nodemon.json
+- >> content: { "verbose": false, "watch": ["./src"], "ext": "js" } 
+- add command script to package.json file: "dev": "nodemon --exec babel-node ./server/index.js",
+- Create app.js inside "src" folder for express configuration: echo > src/app.js
+- > import express and define app constant to use express: const app = express();
+- > import body parser and use it as the express app middleware:
+- -> app.use(bodyParser.urlencoded({extended: true})); app.use(bodyParser.json());
+- > export default express, for later use
+- Create server connection inside "src/index.js" file.
+- Test connection: npm run dev
 ☐ Create controllers
-☐ Create routers
+  - create "controllers" folder inside "src" folder: mkdir src/controllers
+  ☐ User controller file: code src/routes/api/user.controllers.js
+    - Registration controller
+☐ User routers
+  - mkdir src/routes && mkdir src/routes/api
+  ☐ User routes file : code src/routes/api/user.routes.js
+    - import {Router} from "express"
+    - import UserControllers from "../../controllers/user.controllers"
+    - Define express app router constant for later use: const router = Router();
+    - Registration route
+    - Main api routes file: code src/routes/api/index.js
+☐ Main routes file: code src/routes/index.js
 ☐ Connect routers to the app through express
+  - code src/app.js
+☐ Test the app with Postman
+  - Change argon2 to bcrypt. argon2 is currently difficult to make work on Windows 10.
+
+☐ CREATE LOGIN FEATURE
+  - create login controller
+  - create login route : /user/login
+  - use jwt
+
+☐ Access Authorization
+  
+
+☐ TEST THE APP WITH JEST

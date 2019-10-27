@@ -47,14 +47,9 @@ module.exports = {
         type: Sequelize.STRING(14),
         validate: { isNumeric: { msg: "Phone can only contain numbers" } }
       },
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
+      createdAt: { allowNull: false, type: Sequelize.DATE, field: "created_at" },
+      updatedAt: { allowNull: false, type: Sequelize.DATE, field: "updated_at" },
+      deletedAt: { type: Sequelize.DATE, field: "deleted_at" }
     });
   },
   down: (queryInterface, Sequelize) => {
