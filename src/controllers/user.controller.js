@@ -1,6 +1,7 @@
 import { User } from "../database/models";
 import { EMAIL_REGEX, ONE_HOUR } from "../constants";
 import jwt from "jsonwebtoken";
+import express_jwt from "express-jwt";
 
 const dir = require("path");
 require("dotenv").config({ path: dir.join(__dirname, "../../.env") });
@@ -12,15 +13,17 @@ class UserControllers {
    ****************
    */
   static async register(req, res, next) {
+    const { username, email, password } = req.body;
     try {
-      const user = await User.create(req.body);
+      const user_created = await User.create({ username, email, password });
 
-      if (user) {
+      if (user_created) {
         // send confirmation email
       }
-      return res.status(201).json({ error: false, user, message: "Registration success" });
+      return res.status(201).json({ error: false, user_created, message: "Registration success" });
     } catch (error) {
-      return next(error);
+      // return next(error);
+      return res.status(400).json(error);
     }
   }
 
@@ -75,6 +78,25 @@ class UserControllers {
       return next(error);
     }
   }
+
+  static async getAuth(req) {
+    console.log(req.auth);
+  }
 }
+
+/*
+ **************************
+ * CHECK ACCESS PERMISSION
+ **************************
+ * This class' instance property return can be accessed through "req.auth" in the next middleware
+ * because the request property is set to "auth"
+ *
+ * Should be declared outside of class scope because at the time of writing this script,
+ * javascript is not supporting class' instance property declaration inside.
+ */
+UserControllers.authenticate = express_jwt({
+  secret: process.env.SESSION_SECRET,
+  requestProperty: "auth"
+});
 
 export default UserControllers;

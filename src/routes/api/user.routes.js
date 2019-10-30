@@ -8,6 +8,7 @@ const router = Router();
  */
 router.post("/user/register", UserControllers.register);
 router.post("/user/login", UserControllers.login);
+router.get("/protected", UserControllers.authenticate, UserControllers.getAuth);
 
 /* Export router */
 export default router;

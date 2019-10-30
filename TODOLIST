@@ -1,7 +1,8 @@
+FOCUS ON FRONT END - DON'T PAY TOO MUCH ATTENTIONS ON THE BACK END
+
 PROJECT SYLLABUS
 
 START SMALL (piece by piece) will MAKE IT MODULAR (part by part) - Create components in demand
-Focus on Front End - Don't pay too much attentions on the back end
 The MAIN GOAL of this app is to demonstrate the ability in using react js for front end development
 
 I. LOGIN SYSTEM
@@ -12,7 +13,8 @@ I. LOGIN SYSTEM
             c. Create user API
             d. Login user API
             e. Test using jest
-            f. Dockerize
+            f. Security
+            g. Dockerize
         2. Front end
             a. Basic menu bar
             b. Basic login/ registration form pop up (server based only)

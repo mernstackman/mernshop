@@ -1,0 +1,15 @@
+>>> BACK END
+ >> USER Management
+  > Registration
+   + Features
+    - > Basic user data storing
+    - > Send email confirmation message
+    - > Social network registration
+    - > Phone number verification
+        - sms
+        - call
+    - > Credit card verification
+    - > Bank account verification
+    + Task
+        -> Development
+        -> Unit Testing

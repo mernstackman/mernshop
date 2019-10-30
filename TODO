@@ -1,3 +1,5 @@
+:FOCUS ON FRONT END - DON'T PAY TOO MUCH ATTENTIONS ON THE BACK END:
+
 TASKS:
   ☐ Design with Adobe XD
     - Use existing ecommerce website for references
@@ -101,6 +103,15 @@ STEPS:
   - use jwt
 
 ☐ Access Authorization
-  
+  - npm i express-jwt
 
-☐ TEST THE APP WITH JEST
+☐ Unit test the app
+  - npm i -D jest supertest
+  - create "test" script in package.json
+  - create __test__ folder
+  - npm i -D faker
+  - Define test cases and scenarios
+  - Write tests
+    - x Cannot load/ import sequelize model
+
+☐ Start building the frontend with React, Material UI, Redux, Redux Saga
