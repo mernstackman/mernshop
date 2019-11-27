@@ -8,6 +8,7 @@ const router = Router();
  */
 router.post("/user/register", UserControllers.register);
 router.post("/user/login", UserControllers.login);
+// example route for protected area
 router.get("/protected", UserControllers.authenticate, UserControllers.getAuth);
 
 /* Export router */

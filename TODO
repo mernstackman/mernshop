@@ -11,107 +11,136 @@ TASKS:
     - admin dashboard
   ☐ Dockerize with this: E:\dockercon19-master\5.Dockerfile
   ☐ Docker Compose the app
+  
 
 TODO:
   ☐ Check password hash functionality after creating user Controller
   ☐ Redo seed
 
-STEPS:
-☐ Create a blank folder and open it up in VS Code
-☐ Open the folder in terminal
-☐ create github repository
-☐ npm init and write the github repository url in package.json.
-☐ git init
-☐ git remote add origin https://github.com/mernstackman/wdm_app.git
-☐ Create .gitignore file (echo > .gitignore) and put node_modules and .env inside
-☐ npm i express sequelize mysql2 body-parser cors
-☐ npm i -g sequelize-cli
-☐ create .sequelizerc file defining the path of sequelize folders
-☐ sequelize init
-☐ Install dotenv (npm i dotenv)
-☐ Create .env file and its contents
-☐ Edit "src/database/config/config.json"
-- Rename to "config.js" file.
-- Include dotenv on top of it : require("dotenv").config({path:"path/to/.env"});
-- Modify the contents
-- Modify "models/index.js" to include "config.js" file instead of "config.json"
-☐ Create schema/ db name on mysql workbench defined in .env file
-☐ npm i argon2 randombytes
-☐ npm install -g node-gyp
-☐ Create models (sequelize model:create --name TableName --attributes key_0:value_0,key_1:value_1,other_keys:other_values)
-  ☐ User
-  - sequelize model:create --name User --attributes username:string,first_name:string,last_name:string,email:string,password:string,address:string,phone:string,portfolio_id:integer
-  - edit properties of the generated model file.
-  - Add password security and safe data retrieval functions
-  ☐ Roles
-  ☐ Privilege
-  ☐ Category
-  ☐ Sub Category
-  ☐ Product
-  ☐ Shipping
-  ☐ Shipping Address
-  ☐ Shopping Cart
-  ☐ Tax
-  ☐ Order
-  ☐ Order Details
-☐ Create migration file for every model
-☐ Run migration (sequelize db:migrate)
-  - To undo migration into specific file: sequelize db:migrate:undo --to xxxxxxxxxxxx-file-name.js
-☐ Create "sequelize seeds" to populate sql data
-  - sequelize seed:generate --name seed-name
-  - use mockaroo.com to generate fake json data
-  - encrypt password and replace the value is seed file with it << ---
-  - sequelize db:seed:all
-☐ Create node js server:
-- Create index.js file inside "src" folder. This will be the main file for the node js server (echo > src/index.js)
-- add support to latest es6 syntax:
-- > install babel: npm i -D @babel/core @babel/cli @babel/node @babel/preset-env
-- > create .babelrc file. content: {"presets": ["@babel/preset-env"] }
-- setup nodemon to enable hot reloading:
-- > install nodemon: npm i -D nodemon
-- > create nodemon.json file on root folder: echo > nodemon.json
-- >> content: { "verbose": false, "watch": ["./src"], "ext": "js" } 
-- add command script to package.json file: "dev": "nodemon --exec babel-node ./server/index.js",
-- Create app.js inside "src" folder for express configuration: echo > src/app.js
-- > import express and define app constant to use express: const app = express();
-- > import body parser and use it as the express app middleware:
-- -> app.use(bodyParser.urlencoded({extended: true})); app.use(bodyParser.json());
-- > export default express, for later use
-- Create server connection inside "src/index.js" file.
-- Test connection: npm run dev
-☐ Create controllers
-  - create "controllers" folder inside "src" folder: mkdir src/controllers
-  ☐ User controller file: code src/routes/api/user.controllers.js
-    - Registration controller
-☐ User routers
-  - mkdir src/routes && mkdir src/routes/api
-  ☐ User routes file : code src/routes/api/user.routes.js
-    - import {Router} from "express"
-    - import UserControllers from "../../controllers/user.controllers"
-    - Define express app router constant for later use: const router = Router();
-    - Registration route
-    - Main api routes file: code src/routes/api/index.js
-☐ Main routes file: code src/routes/index.js
-☐ Connect routers to the app through express
-  - code src/app.js
-☐ Test the app with Postman
-  - Change argon2 to bcrypt. argon2 is currently difficult to make work on Windows 10.
+BACKEND:
+  ☐ Create a blank folder and open it up in VS Code
+  ☐ Open the folder in terminal
+  ☐ create github repository
+  ☐ npm init and write the github repository url in package.json.
+  ☐ git init
+  ☐ git remote add origin https://github.com/mernstackman/wdm_app.git
+  ☐ Create .gitignore file (echo > .gitignore) and put node_modules and .env inside
+  ☐ npm i express sequelize mysql2 body-parser cors
+  ☐ npm i -g sequelize-cli
+  ☐ create .sequelizerc file defining the path of sequelize folders
+  ☐ sequelize init
+  ☐ Install dotenv (npm i dotenv)
+  ☐ Create .env file and its contents
+  ☐ Edit "src/database/config/config.json"
+  - Rename to "config.js" file.
+  - Include dotenv on top of it : require("dotenv").config({path:"path/to/.env"});
+  - Modify the contents
+  - Modify "models/index.js" to include "config.js" file instead of "config.json"
+  ☐ Create schema/ db name on mysql workbench defined in .env file
+  ☐ npm i argon2 randombytes
+  ☐ npm install -g node-gyp
+  ☐ Create models (sequelize model:create --name TableName --attributes key_0:value_0,key_1:value_1,  other_keys:other_values)
+    ☐ User
+    - sequelize model:create --name User --attributes username:string,first_name:string,last_name:string,email:string,  password:string,address:string,phone:string,portfolio_id:integer
+    - edit properties of the generated model file.
+    - Add password security and safe data retrieval functions
+    ☐ Roles
+    ☐ Privilege
+    ☐ Category
+    ☐ Sub Category
+    ☐ Product
+    ☐ Shipping
+    ☐ Shipping Address
+    ☐ Shopping Cart
+    ☐ Tax
+    ☐ Order
+    ☐ Order Details
+  ☐ Create migration file for every model
+  ☐ Run migration (sequelize db:migrate)
+    - To undo migration into specific file: sequelize db:migrate:undo --to xxxxxxxxxxxx-file-name.js
+  ☐ Create "sequelize seeds" to populate sql data
+    - sequelize seed:generate --name seed-name
+    - use mockaroo.com to generate fake json data
+    - encrypt password and replace the value is seed file with it << ---
+    - sequelize db:seed:all
+  ☐ Create node js server:
+  - Create index.js file inside "src" folder. This will be the main file for the node js server (echo > src/index.js)
+  - add support to latest es6 syntax:
+  - > install babel: npm i -D @babel/core @babel/cli @babel/node @babel/preset-env
+  - > create .babelrc file. content: {"presets": ["@babel/preset-env"] }
+  - setup nodemon to enable hot reloading:
+  - > install nodemon: npm i -D nodemon
+  - > create nodemon.json file on root folder: echo > nodemon.json
+  - >> content: { "verbose": false, "watch": ["./src"], "ext": "js" } 
+  - add command script to package.json file: "dev": "nodemon --exec babel-node ./server/index.js",
+  - Create app.js inside "src" folder for express configuration: echo > src/app.js
+  - > import express and define app constant to use express: const app = express();
+  - > import body parser and use it as the express app middleware:
+  - -> app.use(bodyParser.urlencoded({extended: true})); app.use(bodyParser.json());
+  - > export default express, for later use
+  - Create server connection inside "src/index.js" file.
+  - Test connection: npm run dev
+  ☐ Create controllers
+    - create "controllers" folder inside "src" folder: mkdir src/controllers
+    ☐ User controller file: code src/routes/api/user.controllers.js
+      - Registration controller
+  ☐ User routers
+    - mkdir src/routes && mkdir src/routes/api
+    ☐ User routes file : code src/routes/api/user.routes.js
+      - import {Router} from "express"
+      - import UserControllers from "../../controllers/user.controllers"
+      - Define express app router constant for later use: const router = Router();
+      - Registration route
+      - Main api routes file: code src/routes/api/index.js
+  ☐ Main routes file: code src/routes/index.js
+  ☐ Connect routers to the app through express
+    - code src/app.js
+  ☐ Test the app with Postman
+    - Change argon2 to bcrypt. argon2 is currently difficult to make work on Windows 10.
 
-☐ CREATE LOGIN FEATURE
-  - create login controller
-  - create login route : /user/login
-  - use jwt
+  ☐ CREATE LOGIN FEATURE
+    - create login controller
+    - create login route : /user/login
+    - use jwt
 
-☐ Access Authorization
-  - npm i express-jwt
+  ☐ Access Authorization
+    - npm i express-jwt
 
-☐ Unit test the app
-  - npm i -D jest supertest
-  - create "test" script in package.json
-  - create __test__ folder
-  - npm i -D faker
-  - Define test cases and scenarios
-  - Write tests
-    - x Cannot load/ import sequelize model
+  ☐ UNIT TEST THE APP
+    - npm i -D jest supertest
+    - create "test" script in package.json
+    - create __test__ folder
+    ✘ npm i -D faker @cancelled(19-10-31 06:45)
+    - create test database (mern_shop_test)
+    - set test database to .env
+    - create table that mock the production database
+      - > Open .env file
+      - > change DB_NAME value to mern_shop_test
+      - > run "sequelize db:migrate" command
+      - > revert back the DB_NAME value after migration success
+      - -- OR ---
+      - sequelize db:migrate --env=test
+      - to undo: sequelize db:migrate:undo:all --env=test
+    - Define test cases and scenarios
+    - Write tests
+      ✔ x Cannot load/ import sequelize model @done(19-10-31 09:03)
+      - Test if user give correct input
+      - Test if user give wrong input
+      - Test if unique value already exist
 
-☐ Start building the frontend with React, Material UI, Redux, Redux Saga
+  ☐ SECURITY
+    - Data escaping
+
+  ☐ SPEED
+    - node js performance
+
+  ☐ VALIDATION
+    - trim value
+
+FRONTEND:
+  ☐ React, Material UI, Redux, Redux Saga
+  ☐ Create frontend folder inside root forlder
+  ☐ Install necessary packages 
+    - react
+    - redux
+    - redux saga

@@ -1,6 +1,10 @@
+const dir = require("path");
+require("dotenv").config({ path: dir.join(__dirname, "../.env") });
+
 import express from "express";
 import bodyParser from "body-parser";
 import router from "./routes";
+import cors from "cors";
 
 // Define express constant
 const app = express();
@@ -12,6 +16,7 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.use(cors({ origin: process.env.CALLER_URL }));
 
 /*
  *

@@ -2,8 +2,6 @@ import "core-js";
 import "regenerator-runtime/runtime";
 import request from "supertest";
 import app from "../../app";
-import faker from "faker";
-import { UserControllers } from "../../controllers/user.controller";
 import db from "../../database/models";
 
 describe("User controller", () => {
@@ -24,13 +22,18 @@ describe("User controller", () => {
     return server && server.close(done);
   });
 
-  // Test the registration
+  /*
+   * ------------------
+   * // REGISTRATION TEST
+   * ------------------
+   */
+
   describe("User Registration", () => {
     beforeAll(async done => {
       const { User } = db;
       /* Raw query should be used instead if paranoid is set to true in model definition option */
-      /*       db.sequelize
-        .query("SELECT * FROM `users` WHERE user_id=3")
+      /*db.sequelize
+        .query("SELECT * FROM `users` WHERE username=testUsername")
         .then(result => {
           console.log(result);
         })
@@ -48,16 +51,27 @@ describe("User controller", () => {
       done();
     });
 
+    // user give correct input
     it("Should return status 201 with payload: error = false, user data object, message = Registration success", done => {
       request(app)
         .post("/user/register")
         .send({ username: "testUsername", email: "testUser@email1.com", password: "a1@Bde" })
         .set("Accept", "application/json")
         .end((error, res) => {
-          // console.log(res);
           expect(res.status).toEqual(201);
+          expect(res.body).toHaveProperty("user_created");
           done();
         });
     });
+
+    /*
+     * ---------------------
+     * User give wrong input
+     * ---------------------
+     */
+    // username requirements doesn't fulfilled
+    // email requirements doesn't fulfilled
+    // password requirements doesn't fulfilled
+    // unique value already exists
   });
 });
