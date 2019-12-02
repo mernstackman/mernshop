@@ -16,13 +16,22 @@ class UserControllers {
     const { username, email, password } = req.body;
     try {
       const user_created = await User.create({ username, email, password });
+      const signup_data = await user_created.getSafeDataValues();
+
+      /*  if (signup_data.hasOwnProperty("errors")) {
+        throw signup_data.errors;
+      } */
 
       if (user_created) {
         // send confirmation email
       }
-      return res.status(201).json({ error: false, user_created, message: "Registration success" });
+      // console.log(signup_data);
+      return res
+        .status(201)
+        .json({ error: false, signup_data, message: "Registration success" });
     } catch (error) {
       // return next(error);
+      // console.log(error);
       return res.status(400).json(error);
     }
   }
@@ -49,7 +58,9 @@ class UserControllers {
       const user = await User.findOne({ where: user_identifier });
       const password_correct = await user.verifyPassword(req.body.password);
       if (!password_correct) {
-        return res.status(401).json({ error: true, message: `${identity} and password not match` });
+        return res
+          .status(401)
+          .json({ error: true, message: `${identity} and password not match` });
       }
 
       // generate jwt
@@ -73,7 +84,11 @@ class UserControllers {
           httpOnly: true,
           expires: new Date(Date.now + expiration)
         })
-        .json({ error: false, data, message: { text: "Login success", jwtCode } });
+        .json({
+          error: false,
+          data,
+          message: { text: "Login success", jwtCode }
+        });
     } catch (error) {
       return next(error);
     }
