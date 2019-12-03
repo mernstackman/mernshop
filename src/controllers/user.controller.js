@@ -26,13 +26,17 @@ class UserControllers {
         // send confirmation email
       }
       // console.log(signup_data);
-      return res
-        .status(201)
-        .json({ error: false, signup_data, message: "Registration success" });
+      return res.status(201).json({
+        status: 201,
+        success: true,
+        error: false,
+        signup_data,
+        message: "Registration success"
+      });
     } catch (error) {
       // return next(error);
       // console.log(error);
-      return res.status(400).json(error);
+      return res.status(400).json({ status: 400, success: false, ...error });
     }
   }
 
