@@ -54,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       state: DataTypes.STRING(100),
       country: DataTypes.STRING(100),
       postal_code: DataTypes.STRING(10),
+      email_verified: DataTypes.BOOLEAN,
       phone: {
         type: DataTypes.STRING(14),
         validate: { isNumeric: { msg: "Phone can only contain numbers" } }
@@ -78,23 +79,24 @@ module.exports = (sequelize, DataTypes) => {
     user.password = await user.createPasswordHash(salt);
   });
 
-  User.prototype.createPasswordHash = async function(salt) {
+  User.prototype.createPasswordHash = async function (salt) {
     // return argon2.hash(this.password, { salt });
     return bcrypt.hash(this.password, salt);
   };
 
-  User.prototype.verifyPassword = async function(password) {
+  User.prototype.verifyPassword = async function (password) {
     // return argon2.verify(this.password, password);
     return bcrypt.compare(password, this.password);
   };
 
-  User.prototype.getSafeDataValues = function() {
+  User.prototype.getSafeDataValues = function () {
     const { password, ...data } = this.dataValues;
     return data;
   };
 
-  User.associate = function(models) {
-    // associations can be defined here
+  User.associate = function (models) {
+    // associate user with token
+    User.hasOne(models.EmailToken, { foreignKey: "user_id" })
   };
   return User;
 };

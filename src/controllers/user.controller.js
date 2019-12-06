@@ -18,14 +18,6 @@ class UserControllers {
       const user_created = await User.create({ username, email, password });
       const signup_data = await user_created.getSafeDataValues();
 
-      /*  if (signup_data.hasOwnProperty("errors")) {
-        throw signup_data.errors;
-      } */
-
-      if (user_created) {
-        // send confirmation email
-      }
-      // console.log(signup_data);
       return res.status(201).json({
         status: 201,
         success: true,

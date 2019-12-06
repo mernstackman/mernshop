@@ -44,6 +44,10 @@ BACKEND:
     - sequelize model:create --name User --attributes username:string,first_name:string,last_name:string,email:string,  password:string,address:string,phone:string,portfolio_id:integer
     - edit properties of the generated model file.
     - Add password security and safe data retrieval functions
+    ☐ EmailToken
+    - sequelize model:create --name EmailToken --attributes token:string,user_id:integer
+    - add column: https://itnext.io/overcoming-sequelize-hiccups-24e916ebb4c4
+    - associations: https://sequelize.org/master/manual/associations.html#belongsto
     ☐ Roles
     ☐ Privilege
     ☐ Category

@@ -1,6 +1,8 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
+    console.log("queryInterface", queryInterface)
+    console.log("Sequelize", Sequelize)
     return queryInterface.createTable("Users", {
       user_id: {
         type: Sequelize.INTEGER,
@@ -43,6 +45,7 @@ module.exports = {
       state: Sequelize.STRING(100),
       country: Sequelize.STRING(100),
       postal_code: Sequelize.STRING(10),
+
       phone: {
         type: Sequelize.STRING(14),
         validate: { isNumeric: { msg: "Phone can only contain numbers" } }
