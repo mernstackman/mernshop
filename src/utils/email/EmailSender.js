@@ -15,13 +15,15 @@ require("dotenv").config({ path: dir.join(__dirname, "../../../.env") });
  *  html: html formatted message
  * */
 
-const EmailSender = async (sender, emaildata) => {
+const EmailSender = async (emaildata, sender) => {
     const { email, password, host, port } = await sender;
 
     const credentials = {
         host: host || process.env.EMAIL_HOST,
-        port: port || process.env.EMAIL_PORT,
-        secure: this.port === 465, // true for 465, false for other ports
+        port: port || parseInt(process.env.EMAIL_PORT),
+        get secure() {
+            return this.port === 465;
+        }, // true for 465, false for other ports
         auth: {
             user: email || process.env.EMAIL_ADDRESS, // generated ethereal user
             pass: password || process.env.EMAIL_PASSWORD, // generated ethereal password
@@ -35,9 +37,9 @@ const EmailSender = async (sender, emaildata) => {
 
     try {
         const send_email = await transporter.sendMail(emaildata);
-        return Promise.resolve(send_email);
+        return send_email;
     } catch (error) {
-        return Promise.reject(error);
+        return error;
     }
 };
 

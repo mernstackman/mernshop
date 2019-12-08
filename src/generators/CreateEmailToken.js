@@ -11,9 +11,9 @@ require("dotenv").config({ path: dir.join(__dirname, "../../../.env") });
 const CreateEmailToken = async data => {
     try {
         const token = await jwt.sign(data, process.env.EMAIL_SECRET, { expiresIn: "24h" }, { algorithm: "HS512" });
-        return Promise.resolve(token);
+        return token;
     } catch (error) {
-        return Promise.reject(error);
+        return error;
     }
 };
 
