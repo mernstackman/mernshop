@@ -5,18 +5,23 @@ import express from "express";
 import bodyParser from "body-parser";
 import router from "./routes";
 import cors from "cors";
+import compression from "compression";
+import helmet from "helmet";
 
 // Define express constant
 const app = express();
+// Resolve content security policy restrictions
+app.use(cors({ origin: [process.env.CALLER_URL, "http://localhost/"] }));
+app.use(compression());
+app.use(helmet());
 
 // Use body parser middleware
 app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
+    bodyParser.urlencoded({
+        extended: true,
+    })
 );
 app.use(bodyParser.json());
-app.use(cors({ origin: process.env.CALLER_URL }));
 
 /*
  *

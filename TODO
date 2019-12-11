@@ -134,6 +134,7 @@ BACKEND:
 
   ☐ SECURITY
     - Data escaping
+    - CSP: https://www.google.com/search?newwindow=1&safe=strict&sxsrf=ACYBGNTM2Od1pwRy6eaQXeQFaEwOFZYqUw%3A1575966130114&ei=slXvXei7Bu-CrtoPqrSeyA4&q=express+js+Content+Security+Policy&oq=express+js+Content+Security+Policy&gs_l=psy-ab.3..35i39j0j0i22i30.470050.470050..470626...0.2..0.189.189.0j1......0....1..gws-wiz.......0i71.KN0l1O2S3Ig&ved=0ahUKEwjo3POq06rmAhVvgUsFHSqaB-kQ4dUDCAo&uact=5
 
   ☐ SPEED
     - node js performance

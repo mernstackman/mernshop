@@ -13,7 +13,7 @@ require("dotenv").config({ path: dir.join(__dirname, "../../../.env") });
  * * token - Generated token [string] (when using test message)
  * */
 
-const VerifyEmailMessage = data => ({
+const EmailVerificationMessage = data => ({
     from: data.sender || `"MERN Stack Email" ${process.env.TEST_SENDER_EMAIL}`, // string - name and email
     to: data.receiver || process.env.TEST_RECEIVER_EMAIL, // string - email
     subject: data.subject || "Confirm Your Email",
@@ -28,4 +28,4 @@ const VerifyEmailMessage = data => ({
       <b><a href="${process.env.BASE_URL}/${data.url || "auth/email/verify/"}${data.token}">CONFIRM</a></b>`,
 });
 
-export default VerifyEmailMessage;
+export default EmailVerificationMessage;
