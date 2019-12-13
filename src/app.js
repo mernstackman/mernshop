@@ -11,7 +11,7 @@ import helmet from "helmet";
 // Define express constant
 const app = express();
 // Resolve content security policy restrictions
-app.use(cors({ origin: [process.env.CALLER_URL, "http://localhost/"] }));
+app.use(cors({ origin: process.env.CALLER_URL }));
 app.use(compression());
 app.use(helmet());
 

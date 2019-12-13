@@ -11,14 +11,23 @@ class AuthControllers {
         try {
             // pass email as the value of receiver property on EmailVerificationMessage method
             const { email: receiver } = req.body;
-            const { token } = req.token_detail.result.token;
-            const _email = EmailVerificationMessage({ receiver, token });
+            const { token } = req.token_detail.result;
 
+            /* Write test instead of doing the test like these */
+            // Send email using test sender and receiver address. The receiver email address will
+            // be replaced with test receiver address because testSend is set to true
+            const _email = EmailVerificationMessage({ testSend: true, receiver, token });
+
+            const email_delivery = await EmailSender(_email, {});
             // muted temporarily for development
-            // const email_delivery = await EmailSender(_email, {});
-            const email_delivery = { _email }; // activate above and mute this to send email
+            // not sending email
+            // const email_delivery = { _email }; // uncomment above and comment this to send email
 
-            return res.status(200).json({ success: true, email_delivery });
+            return res.status(200).json({
+                success: true,
+                email_delivery,
+                message: "Please check your email inbox or spam folder for verification link.",
+            });
         } catch (error) {
             console.log(error);
             return res.status(400).json({ error });
