@@ -11,7 +11,7 @@ import helmet from "helmet";
 // Define express constant
 const app = express();
 // Resolve content security policy restrictions
-app.use(cors({ origin: process.env.CALLER_URL }));
+app.use(cors({ origin: [process.env.CALLER_URL] }));
 app.use(compression());
 app.use(helmet());
 
@@ -30,5 +30,18 @@ app.use(bodyParser.json());
  *
  */
 app.use(router);
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+    // console.log(err);
+    return res.status(err.status || 500).json({
+        error: {
+            message: err.message,
+        },
+    });
+});
 
+// Display html page
+app.get("*", (req, res) => {
+    res.sendFile(dir.join(__dirname, "./index.html"));
+});
 export default app;

@@ -1,3 +1,5 @@
+/* eslint-disable require-atomic-updates */
+/* eslint-disable no-unused-vars */
 import { User } from "../database/models";
 import { EMAIL_REGEX, ONE_HOUR } from "../constants";
 import jwt from "jsonwebtoken";
@@ -6,7 +8,61 @@ import express_jwt from "express-jwt";
 const dir = require("path");
 require("dotenv").config({ path: dir.join(__dirname, "../../.env") });
 
-class UserControllers {
+class Users {
+    static async getById(req, res, next) {
+        let { user_id } = req.body;
+        if (!user_id) {
+            user_id = req.jwtToken.payload.user_id;
+        }
+
+        try {
+            const userDetails = await User.findByPk(user_id);
+            if (!userDetails) {
+                throw new Error("No user found!");
+            }
+
+            req.userDetails = userDetails.getSafeDataValues();
+            next();
+        } catch (error) {
+            return next(error);
+        }
+    }
+
+    static async checkEmailStatus(req, res, next) {
+        let emailStatus = false;
+        try {
+            if (req.userDetails) {
+                emailStatus = req.userDetails.email_verified;
+            }
+            if (emailStatus) {
+                throw new Error("Email is already verified!");
+            }
+            next();
+        } catch (error) {
+            return next(error);
+        }
+    }
+
+    static async compareEmail(req, res, next) {
+        try {
+            if (!req.jwtToken || !req.body || !req.userDetails) {
+                throw new Error("One or more required data is not supplied!");
+            }
+
+            const { email: outerEmail } = req.jwtToken.payload || req.body;
+            const { email: dbEmail } = req.userDetails;
+            console.log(outerEmail, dbEmail);
+
+            if (outerEmail !== dbEmail) {
+                throw new Error("Invalid email");
+            }
+            // req.emailAddressMatched = true;
+            next();
+        } catch (error) {
+            return next(error);
+        }
+    }
+
     /*
      ****************
      * REGISTER USER
@@ -103,9 +159,9 @@ class UserControllers {
  * Should be declared outside of class scope because at the time of writing this script,
  * javascript is not supporting class' instance property declaration inside.
  */
-UserControllers.authenticate = express_jwt({
+Users.authenticate = express_jwt({
     secret: process.env.SESSION_SECRET,
     requestProperty: "auth",
 });
 
-export default UserControllers;
+export default Users;
