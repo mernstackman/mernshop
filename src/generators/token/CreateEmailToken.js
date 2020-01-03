@@ -1,8 +1,7 @@
 /* eslint-disable no-undef */
 import jwt from "jsonwebtoken";
-
 const dir = require("path");
-require("dotenv").config({ path: dir.join(__dirname, "../../../.env") });
+require("dotenv").config({ path: dir.join(__dirname, "../../../../.env") });
 
 /**
  * @param {*} data = {user_id, email}

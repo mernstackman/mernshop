@@ -47,6 +47,7 @@ BACKEND:
     ☐ EmailToken
     - sequelize model:create --name EmailToken --attributes token:string,user_id:integer
     - add column: https://itnext.io/overcoming-sequelize-hiccups-24e916ebb4c4
+      - > sequelize migration:generate --name emailtoken-updates
     - associations: https://sequelize.org/master/manual/associations.html#belongsto
     ☐ Roles
     ☐ Privilege
@@ -106,6 +107,8 @@ BACKEND:
     - create login controller
     - create login route : /user/login
     - use jwt
+    - https://www.google.com/search?newwindow=1&safe=strict&biw=1280&bih=820&sxsrf=ACYBGNTOWcRkoWizUHMW4a9reai5B27LTQ%3A1577198255130&ei=ryICXsDMB5nn9QPwu4KYDw&q=nodejs+login+user+with+token&oq=nodejs+login+user+with+token&gs_l=psy-ab.3..0i71l8.4970693.4981623..4981929...0.6..0.0.0.......0....1..gws-wiz.N2SZLphENgY&ved=0ahUKEwiA4PKtwc7mAhWZc30KHfCdAPMQ4dUDCAo&uact=5
+
 
   ☐ Access Authorization
     - npm i express-jwt

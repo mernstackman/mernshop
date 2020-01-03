@@ -3,7 +3,7 @@
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.addColumn("users", "email_verified", { type: Sequelize.BOOLEAN, defaultValue: false });
+        return queryInterface.removeColumn("emailtokens", "expire_in");
     },
 
     down: (queryInterface, Sequelize) => {

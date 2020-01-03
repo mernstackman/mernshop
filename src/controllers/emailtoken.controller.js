@@ -1,25 +1,35 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable require-atomic-updates */
 import { EmailToken } from "../database/models";
-import CreateEmailToken from "../generators/CreateEmailToken";
+import { CreateEmailToken } from "../generators/token";
 
 class Emailtoken {
     static async getByUserId(req, res, next) {
+        const { jwtToken } = req.apiResults;
+        let { user_id } = await req.params;
+
+        if (!user_id && req.body.user_id) {
+            user_id = await req.body.user_id;
+        }
+
+        if (!user_id && jwtToken && jwtToken.payload) {
+            user_id = await jwtToken.payload.user_id;
+        }
+
         try {
-            let { user_id, ignore } = req.body;
-
-            if (!user_id) {
-                user_id = req.jwtToken.payload.user_id;
-            }
-
-            console.log(user_id, ignore);
             const rawDetails = await EmailToken.findOne({ where: { user_id } });
+            const { ignore } = req.body;
 
+            // If no result and don't ignore error -> throw Error
             if (!rawDetails && !ignore) {
                 throw new Error(`User with ID: ${user_id} has no email token record in database.`);
             }
 
-            if (rawDetails) req.dbToken = rawDetails.dataValues;
+            if (rawDetails) {
+                const dbToken = rawDetails.dataValues;
+                const allResults = await { ...req.apiResults, dbToken };
+                req.apiResults = { ...allResults };
+            }
 
             next();
         } catch (error) {
@@ -29,8 +39,9 @@ class Emailtoken {
 
     /* Compare email tokens from extracted jwt and database */
     static async compare(req, res, next) {
+        const { jwtToken, dbToken } = req.apiResults;
         try {
-            if (!req.jwtToken || !req.body || !req.dbToken) {
+            if (!jwtToken || !req.body || !dbToken) {
                 throw new Error("One or more required data is not supplied!");
             }
 
@@ -77,7 +88,9 @@ class Emailtoken {
                 result: { token, user_id },
                 message,
             };
-            req.token_detail = token_creation;
+            const tokenDetail = token_creation;
+            const allResults = { ...req.apiResults, tokenDetail };
+            req.apiResults = { ...allResults };
             // return res.status(201).json(token_creation);
             next();
             // return next(token_creation);

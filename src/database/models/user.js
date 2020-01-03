@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             username: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
+                allowNull: true,
                 unique: true,
                 validate: {
                     is: {
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             password: {
                 type: DataTypes.STRING,
-                allowNull: false,
+                allowNull: true,
                 validate: {
                     is: {
                         args: ["^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,100}$"],
@@ -60,6 +60,8 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING(14),
                 validate: { isNumeric: { msg: "Phone can only contain numbers" } },
             },
+            access_token: DataTypes.STRING,
+            expires_in: DataTypes.DATE,
             createdAt: { type: DataTypes.DATE, field: "created_at" },
             updatedAt: { type: DataTypes.DATE, field: "updated_at" },
             deletedAt: { type: DataTypes.DATE, field: "deleted_at" },
@@ -76,11 +78,15 @@ module.exports = (sequelize, DataTypes) => {
         /*     const salt = randomBytes(32).toString("hex");
     user.salt = salt;
     user.password = await user.createPasswordHash(salt); */
+
         const salt = await bcrypt.genSalt(10);
         user.password = await user.createPasswordHash(salt);
     });
 
     User.prototype.createPasswordHash = async function(salt) {
+        if (!this.password) {
+            return null;
+        }
         // return argon2.hash(this.password, { salt });
         return bcrypt.hash(this.password, salt);
     };
@@ -99,6 +105,7 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = function(models) {
         // associate user with token
         User.hasOne(models.EmailToken, { foreignKey: "user_id" });
+        User.hasOne(models.FbUser, { foreignKey: "user_id" });
     };
     return User;
 };

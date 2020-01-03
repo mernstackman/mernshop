@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             token: DataTypes.STRING,
             user_id: DataTypes.INTEGER,
+            expire_at: DataTypes.DATE,
             createdAt: { type: DataTypes.DATE, field: "createdAt" },
             updatedAt: { type: DataTypes.DATE, field: "updatedAt" },
         },

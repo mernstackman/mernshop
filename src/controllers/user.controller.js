@@ -1,18 +1,22 @@
 /* eslint-disable require-atomic-updates */
 /* eslint-disable no-unused-vars */
 import { User } from "../database/models";
-import { EMAIL_REGEX, ONE_HOUR } from "../constants";
-import jwt from "jsonwebtoken";
-import express_jwt from "express-jwt";
 
 const dir = require("path");
 require("dotenv").config({ path: dir.join(__dirname, "../../.env") });
 
 class Users {
     static async getById(req, res, next) {
-        let { user_id } = req.body;
-        if (!user_id) {
-            user_id = req.jwtToken.payload.user_id;
+        // or req.params.user_id (if /:user_id) or req.query.user_id (if ?user_id={user-id})
+        const { jwtToken } = req.apiResults;
+        let { user_id } = await req.params;
+
+        if (!user_id && req.body.user_id) {
+            user_id = await req.body.user_id;
+        }
+
+        if (!user_id && jwtToken && jwtToken.payload) {
+            user_id = await jwtToken.payload.user_id;
         }
 
         try {
@@ -21,7 +25,10 @@ class Users {
                 throw new Error("No user found!");
             }
 
-            req.userDetails = userDetails.getSafeDataValues();
+            const userData = await userDetails.getSafeDataValues();
+            const allResults = await { ...req.apiResults, userData };
+            req.apiResults = { ...allResults };
+
             next();
         } catch (error) {
             return next(error);
@@ -30,13 +37,18 @@ class Users {
 
     static async checkEmailStatus(req, res, next) {
         let emailStatus = false;
+        const { userData } = await req.apiResults;
+
         try {
-            if (req.userDetails) {
-                emailStatus = req.userDetails.email_verified;
+            if (userData) {
+                emailStatus = await userData.email_verified;
             }
+
+            // if email status is already verified (email_verified = true)
             if (emailStatus) {
                 throw new Error("Email is already verified!");
             }
+
             next();
         } catch (error) {
             return next(error);
@@ -44,13 +56,15 @@ class Users {
     }
 
     static async compareEmail(req, res, next) {
+        const { jwtToken, userData } = req.apiResults;
+
         try {
-            if (!req.jwtToken || !req.body || !req.userDetails) {
+            if (!jwtToken || !req.body || !userData) {
                 throw new Error("One or more required data is not supplied!");
             }
 
-            const { email: outerEmail } = req.jwtToken.payload || req.body;
-            const { email: dbEmail } = req.userDetails;
+            const { email: outerEmail } = (jwtToken && jwtToken.payload) || req.body;
+            const { email: dbEmail } = userData;
             console.log(outerEmail, dbEmail);
 
             if (outerEmail !== dbEmail) {
@@ -71,6 +85,12 @@ class Users {
     static async register(req, res) {
         const { username, email, password } = req.body;
         try {
+            if (!username) {
+                throw new Error("Username is required");
+            }
+            if (!password) {
+                throw new Error("Password is required");
+            }
             const user_created = await User.create({ username, email, password });
             const signup_data = await user_created.getSafeDataValues();
 
@@ -88,80 +108,22 @@ class Users {
         }
     }
 
-    /*
-     ****************
-     * LOGIN USER
-     ****************
-     */
-    static async login(req, res, next) {
-        /* Initialize login */
-        let user_identifier = {};
-        let identity = "";
-        if (EMAIL_REGEX.test(req.body.user)) {
-            user_identifier = { email: req.body.user };
-            identity = "email";
-        } else {
-            user_identifier = { username: req.body.user };
-            identity = "username";
-        }
+    static async registerUserFromFb(req, res, next) {
+        // {user-id}/picture?type=large
+        const fbUserDetails = { ...req.apiResults.fbTokenData, ...req.apiResults.fbUserData };
+        const { first_name, last_name, email } = fbUserDetails;
 
-        /* Trying to login user */
         try {
-            const user = await User.findOne({ where: user_identifier });
-            const password_correct = await user.verifyPassword(req.body.password);
-            if (!password_correct) {
-                return res.status(401).json({ error: true, message: `${identity} and password not match` });
-            }
+            const CreateFbUser = await User.create({ first_name, last_name, email, email_verified: true });
+            const registeredFbUser = CreateFbUser.getSafeDataValues();
+            const allResults = { ...req.apiResults, registeredFbUser };
+            req.apiResults = { ...allResults };
 
-            // generate jwt
-            const expiration = 6 * ONE_HOUR;
-            const { user_id, email, username } = await user.dataValues;
-            const jwtCode = jwt.sign(
-                {
-                    user_id,
-                    email,
-                    username,
-                },
-                process.env.SESSION_SECRET,
-                { expiresIn: expiration, algorithm: "HS512" }
-            );
-
-            // store jwt to user cookies and output user data
-            const data = await user.getSafeDataValues();
-            return res
-                .status(200)
-                .cookie("log_id", "Bearer " + jwtCode, {
-                    httpOnly: true,
-                    expires: new Date(Date.now + expiration),
-                })
-                .json({
-                    error: false,
-                    data,
-                    message: { text: "Login success", jwtCode },
-                });
+            next();
         } catch (error) {
-            return next(error);
+            return res.status(400).json({ status: 400, success: false, ...error });
         }
-    }
-
-    static async getAuth(req) {
-        console.log(req.auth);
     }
 }
-
-/*
- **************************
- * CHECK ACCESS PERMISSION
- **************************
- * This class' instance property return can be accessed through "req.auth" in the next middleware
- * because the request property is set to "auth"
- *
- * Should be declared outside of class scope because at the time of writing this script,
- * javascript is not supporting class' instance property declaration inside.
- */
-Users.authenticate = express_jwt({
-    secret: process.env.SESSION_SECRET,
-    requestProperty: "auth",
-});
 
 export default Users;
