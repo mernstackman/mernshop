@@ -1,7 +1,9 @@
 /* eslint-disable require-atomic-updates */
 /* eslint-disable no-unused-vars */
-import { User } from "../database/models";
 
+/* Please take a look on routes files for easy controller navigation */
+
+import { User } from "../database/models";
 const dir = require("path");
 require("dotenv").config({ path: dir.join(__dirname, "../../.env") });
 

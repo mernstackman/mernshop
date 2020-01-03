@@ -3,6 +3,7 @@ import global from "../../controllers";
 import Emailtoken from "../../controllers/emailtoken.controller";
 import AuthControllers from "../../controllers/auth.controller";
 import Users from "../../controllers/user.controller";
+import FbUsers from "../../controllers/fbuser.controller";
 // import FbUsers from "../../controllers/fbuser.controller";
 
 const router = Router();
@@ -33,9 +34,10 @@ router.post("/auth/login", global.initApiResults, AuthControllers.login);
 router.post(
     "/auth/facebook",
     global.initApiResults,
-    AuthControllers.extendToken,
-    AuthControllers.getFbUserData,
-    Users.registerUserFromFb
+    FbUsers.extendToken,
+    FbUsers.getFbUserData,
+    Users.registerUserFromFb,
+    FbUsers.storeFbUserData
 );
 
 // example route for protected area

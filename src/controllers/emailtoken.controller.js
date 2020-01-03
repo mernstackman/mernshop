@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable require-atomic-updates */
+
+/* Please take a look on routes files for easy controller navigation */
+
 import { EmailToken } from "../database/models";
 import { CreateEmailToken } from "../generators/token";
 
