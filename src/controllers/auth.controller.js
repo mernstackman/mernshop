@@ -7,9 +7,7 @@ import { User } from "../database/models";
 import EmailSender from "../utils/email/EmailSender";
 import EmailVerificationMessage from "../generators/emails/EmailVerificationMessage";
 import jwt from "jsonwebtoken";
-import { EMAIL_REGEX, ONE_HOUR } from "../constants";
 import express_jwt from "express-jwt";
-import { generateLoginToken } from "../generators/token";
 
 const dir = require("path");
 require("dotenv").config({ path: dir.join(__dirname, "../../../.env") });
@@ -95,55 +93,6 @@ class AuthControllers {
                 success: true,
                 updated: setEmailVerified,
             });
-        } catch (error) {
-            return next(error);
-        }
-    }
-
-    /*
-     ****************
-     * LOGIN USER
-     ****************
-     */
-    static async login(req, res, next) {
-        /* Initialize login */
-        let user_identifier = {};
-        let identity = "";
-        if (EMAIL_REGEX.test(req.body.user)) {
-            user_identifier = { email: req.body.user };
-            identity = "email";
-        } else {
-            user_identifier = { username: req.body.user };
-            identity = "username";
-        }
-
-        /* Trying to login user */
-        try {
-            const user = await User.findOne({ where: user_identifier });
-            const password_correct = await user.verifyPassword(req.body.password);
-            if (!password_correct) {
-                // return res.status(401).json({ error: true, message: `${identity} and password not match` });
-                throw new Error(`${identity} and password not match`);
-            }
-
-            // generate jwt
-            const data = await user.getSafeDataValues();
-            const { user_id, email, username } = data;
-            const jwtCode = await generateLoginToken({ user_id, email, username });
-
-            // store jwt to user cookies and output user data
-            const expiration = 12 * ONE_HOUR;
-            return res
-                .status(200)
-                .cookie("log_id", "Bearer " + jwtCode, {
-                    httpOnly: true,
-                    expires: new Date(Date.now() + expiration),
-                })
-                .json({
-                    error: false,
-                    data,
-                    message: { text: "Login success", jwtCode },
-                });
         } catch (error) {
             return next(error);
         }

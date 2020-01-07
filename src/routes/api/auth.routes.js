@@ -29,15 +29,18 @@ router.post(
     AuthControllers.setUserEmailStatus
 );
 
-router.post("/auth/login", global.initApiResults, AuthControllers.login);
+router.post("/auth/login", global.initApiResults, Users.login);
 
 router.post(
     "/auth/facebook",
     global.initApiResults,
+    FbUsers.inspectToken,
+    FbUsers.compareAppId,
+    FbUsers.getDataFromToken,
     FbUsers.extendToken,
-    FbUsers.getFbUserData,
-    Users.registerUserFromFb,
-    FbUsers.storeFbUserData
+    Users.registerFromFb,
+    FbUsers.storeData,
+    FbUsers.login
 );
 
 // example route for protected area
